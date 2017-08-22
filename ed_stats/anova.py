@@ -1,6 +1,7 @@
 from pandas import DataFrame
 from scipy.stats import f
-from numpy.linalg import norm
+from numpy.linalg import norm, pinv
+from numpy import trace
 
 def weighted_sum(func_data):
     """
@@ -11,10 +12,22 @@ def weighted_sum(func_data):
     return func_data.mean() * func_data.count()
 
 
+def matrix_inverse(func_data):
+    """
+    Return the matrix inverse of an input dataframe
+    :param func_data: (pandas DataFrame) dataframe to be inverted
+    :return: the inverse matrix as a dataframe
+    """
+    return DataFrame(pinv(func_data.values), func_data.columns, func_data.index)
+
+
 class AnovaDataFrame(DataFrame):
     """
     Subclass of pandas DataFrame implementing ANOVA methods
     """
+
+    def inverse(self):
+        return matrix_inverse(self)
 
     def anova(self, group_column, columns=None):
         """
@@ -115,8 +128,12 @@ class AnovaDataFrame(DataFrame):
 
         wilks_lambda = norm(error_variance.values)/norm(total_variance.values)
 
-        # hotelling_lawley_trace =
+        hotelling_lawley_trace = trace(hypothesis_variance.dot(error_variance.inverse()))
 
-        return wilks_lambda
+        phillai_bartlett_trace = trace(hypothesis_variance.dot(
+            (hypothesis_variance + error_variance).inverse()
+        ))
+
+        return wilks_lambda, hotelling_lawley_trace, phillai_bartlett_trace
 
     pass
