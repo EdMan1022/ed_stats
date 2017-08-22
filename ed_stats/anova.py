@@ -99,7 +99,6 @@ class AnovaDataFrame(DataFrame):
         data = self.dropna(axis=0, how='any', subset=columns)
         data.loc[:, columns] = data.loc[:, columns].astype(float)
         data.loc[:, group_column] = data.loc[:, group_column].astype(float)
-        n_groups = data.loc[:, group_column].unique().shape[0]
 
         data = data.dropna()
 
@@ -117,7 +116,7 @@ class AnovaDataFrame(DataFrame):
         total_variance = data.cov() * (total_n - 1)
 
         hypothesis_variance = (sample_mean_matrix - grand_mean_vector).dot(
-            (sample_mean_matrix - grand_mean_vector).T.dot(*n_vector))
+            (sample_mean_matrix - grand_mean_vector).T.dot(n_vector))
 
         error_variance = total_variance - hypothesis_variance
 
