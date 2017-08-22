@@ -96,11 +96,9 @@ class AnovaDataFrame(DataFrame):
         else:
             columns = self.drop(labels=[group_column], axis=1).columns
 
-        result = DataFrame(data=None, index=columns,
-                           columns=['p_value', 'f_statistic', 'mean_variance_between', 'mean_variance_within', ])
-
         data = self.dropna(axis=0, how='any', subset=columns)
         data.loc[:, columns] = data.loc[:, columns].astype(float)
+        data.loc[:, group_column] = data.loc[:, group_column].astype(float)
         n_groups = data.loc[:, group_column].unique().shape[0]
 
         data = data.dropna()
@@ -109,10 +107,7 @@ class AnovaDataFrame(DataFrame):
 
         n_vector = data.groupby(group_column)[columns[0]].count()
 
-        df1 = n_groups - 1
-        df2 = total_n - n_groups
-
-        grand_mean_vector = sum(data.groupby(group_column)[columns].agg(weighted_sum)) / total_n
+        grand_mean_vector = (data.groupby(group_column)[columns].agg(weighted_sum)).sum() / total_n
 
         sample_mean_matrix = DataFrame(data=None, index=data.loc[:, group_column].unique(), columns=columns)
 
