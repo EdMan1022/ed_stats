@@ -1,6 +1,6 @@
 from pandas import DataFrame
 from scipy.stats import f
-
+from numpy.linalg import norm
 
 def weighted_sum(func_data):
     """
@@ -9,15 +9,6 @@ def weighted_sum(func_data):
     :return:
     """
     return func_data.mean() * func_data.count()
-
-
-def grand_mean(data_set):
-    """
-    Calculates the Grand Mean of an entire data set for ANOVAs and MANOVAs
-    :param data_set: (pandas.DataFrame) Data set being analyzed
-    :return: (float) Grand mean value
-    """
-
 
 
 class AnovaDataFrame(DataFrame):
@@ -103,38 +94,29 @@ class AnovaDataFrame(DataFrame):
 
         total_n = data.loc[:, columns[0]].count()
 
+        n_vector = data.groupby(group_column)[columns[0]].count()
+
         df1 = n_groups - 1
         df2 = total_n - n_groups
 
-        grand_mean = data.groupby()
+        grand_mean_vector = sum(data.groupby(group_column)[columns].agg(weighted_sum)) / total_n
 
-        # Calculate the amount of variance between different sub groups
-        ss_between = sum(
-            data.groupby(group_column).count()[dep_variable] * (
-                data.groupby(group_column).mean()[dep_variable] - grand_mean
-            ) ** 2)
+        sample_mean_matrix = DataFrame(data=None, index=data.loc[:, group_column].unique(), columns=columns)
 
-        # Calculate the amount of variance within different sub groups
-        ss_within = sum(df2 * data.groupby(group_column).var()[dep_variable])
+        for dependent_variable in columns:
+            sample_mean_matrix.loc[:, dependent_variable] = data.groupby(group_column)[dependent_variable].mean()
 
-        # Get the weighted mean variance by dividing by the degrees of freedom
-        ms_between = ss_between / df1
-        ms_within = ss_within / df2
+        total_variance = data.cov() * (total_n - 1)
 
-        # Calculate the f statistic for this hypothesis
-        f_statistic = ms_between / ms_within
+        hypothesis_variance = (sample_mean_matrix - grand_mean_vector).dot(
+            (sample_mean_matrix - grand_mean_vector).T.dot(*n_vector))
 
-        # Calculate the p_value given the F statistic
+        error_variance = total_variance - hypothesis_variance
 
-        p_value = f.sf(f_statistic, df1, df2)
+        wilks_lambda = norm(error_variance.values)/norm(total_variance.values)
 
-        result.loc[dep_variable, 'mean_variance_between'] = ms_between
-        result.loc[dep_variable, 'mean_variance_within'] = ms_within
-        result.loc[dep_variable, 'f_statistic'] = f_statistic
-        result.loc[dep_variable, 'p_value'] = p_value
+        # hotelling_lawley_trace =
 
-        return result
-
-
+        return wilks_lambda
 
     pass
