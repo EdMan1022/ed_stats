@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='ed_stats',
-    version='0.4',
+    version='0.5',
     description='Collection of my augmented pandas classes, implementing ANOVA and machine learning methods',
     url='https://github.com/EdMan1022/ed_stats.git',
     author='EdMan1022',
