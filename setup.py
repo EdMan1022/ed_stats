@@ -9,6 +9,6 @@ setup(
     author_email='EdMan1022@gmail.com',
     license='MIT',
     packages=['ed_stats'],
-    install_requires=['pandas', 'scipy'],
+    install_requires=['pandas', 'scipy', 'scikit-learn', 'numpy'],
     python_requires='>=3',
     zip_safe=False)
