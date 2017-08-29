@@ -14,4 +14,11 @@ Calculates a simple [one way ANOVA](https://en.wikipedia.org/wiki/One-way_analys
 
 ###factorial\_anova(input\_data, group\_column, columns=None, n\_factors=3)
 
-First uses [Scikit-Learn's Principle Component Analysis](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA) to reduce the dependent variables specified in columns to the smaller number of factors defined by n\_factors. Then, performs one way ANOVAs for each of these new factors. Returns the same 
+First uses [Scikit-Learn's Principle Component Analysis](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA) to reduce the dependent variables specified in columns to the smaller number of factors defined by n\_factors. Then, performs one way ANOVAs for each of these new factors. Returns the same result dataframe as anova() does.
+
+
+---
+
+###manova(input\_data, group\_column, columns=None)
+
+Calculates a [MANOVA](https://en.wikipedia.org/wiki/Multivariate_analysis_of_variance) for the input data, with independent variable given by group\_column and dependent variables given in columns.  Returns a result dataframe containing the values of several tests; [Wilks Lambda](http://www.statisticshowto.com/wilks-lambda/)(rejects null hypothesis when value is low), Hotelling [Lawley Trace](http://www.real-statistics.com/multivariate-statistics/multivariate-analysis-of-variance-manova/manova-basic-concepts/)(rejects null hypothesis when value is large), and [Phillai Bartlett Trace](http://www.real-statistics.com/multivariate-statistics/multivariate-analysis-of-variance-manova/manova-basic-concepts/)(rejects null hypothesis when value is large).
