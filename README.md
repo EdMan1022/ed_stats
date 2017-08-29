@@ -5,11 +5,11 @@ The package includes several functions, which take pandas dataframes, the string
 
 ---
 
-anova(input_data, group_column, columns=None)
+anova(input\_data, group\_column, columns=None)
 
-Calculates a simple [one way ANOVA](https://en.wikipedia.org/wiki/One-way_analysis_of_variance) for each dependent variable given in columns. If no argument is passed for columns, returns a result for every column in input_data that isn't group_column. Returns a result dataframe containing the mean variance between independent variable groups, the mean variance within these groups, the calculated f statistic, and the p value associated with this f statistic and the data set's degrees of freedom.
+Calculates a simple [one way ANOVA](https://en.wikipedia.org/wiki/One-way_analysis_of_variance) for each dependent variable given in columns. If no argument is passed for columns, returns a result for every column in input\_data that isn't group\_column. Returns a result dataframe containing the mean variance between independent variable groups, the mean variance within these groups, the calculated f statistic, and the p value associated with this f statistic and the data set's degrees of freedom.
 ---
 
-factorial_anova(input_data, group_column, columns=None, n_factors=3)
+factorial\_anova(input\_data, group\_column, columns=None, n\_factors=3)
 
-First uses [Scikit-Learn's Principle Component Analysis](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA) to reduce the dependent variables specified in columns to the smaller number of factors defined by n_factors. Then, performs one way ANOVAs for each of these new factors.
+First uses [Scikit-Learn's Principle Component Analysis](http://scikit-learn.org/stable/modules/generated/sklearn.decomposition.PCA.html#sklearn.decomposition.PCA) to reduce the dependent variables specified in columns to the smaller number of factors defined by n\_factors. Then, performs one way ANOVAs for each of these new factors.
