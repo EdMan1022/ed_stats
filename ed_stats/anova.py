@@ -8,8 +8,9 @@ from sklearn.decomposition import PCA
 def weighted_sum(func_data):
     """
     Return the mean of a series multiplied by the number of items in the series.
+    Used to calculate an ANOVA for datasets with different ns for each independent variable group.
     :param func_data: (pandas Series) input data
-    :return:
+    :return: float
     """
     return func_data.mean() * func_data.count()
 
@@ -17,6 +18,7 @@ def weighted_sum(func_data):
 def matrix_inverse(func_data):
     """
     Return the matrix inverse of an input dataframe
+    Used to calculate some of the statistical tests for the MANOVA
     :param func_data: (pandas DataFrame) dataframe to be inverted
     :return: the inverse matrix as a dataframe
     """
