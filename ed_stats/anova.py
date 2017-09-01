@@ -1,7 +1,7 @@
-from pandas import DataFrame, Series
-from scipy.stats import f
-from numpy.linalg import norm, pinv
 from numpy import trace
+from numpy.linalg import norm, pinv
+from pandas import DataFrame
+from scipy.stats import f
 from sklearn.decomposition import PCA
 
 
@@ -41,7 +41,6 @@ def anova(input_data, group_column, columns=None):
     # for var_column in columns:
     #     input_data.loc[:, var_column] = input_data.loc[:, var_column].astype(float)
     input_data.loc[:, group_column] = input_data.loc[:, group_column].astype(float)
-
 
     result = DataFrame(data=None, index=columns,
                        columns=['p_value', 'f_statistic', 'mean_variance_between', 'mean_variance_within', ])
@@ -158,12 +157,16 @@ def factorial_anova(input_data, group_column, columns=None, n_factors=3):
 
 def manova(input_data, group_column, columns=None):
     """
-    Calculate a MANOVA
+    Calculate a MANOVA on the data in input_data
+    :param input_data: (pandas DataFrame) Data being analyzed
     :param group_column: (str, int, pandas column object) Specifies the independent variable column
     :param columns: (list) List of the dependent variables to analyze the effect of the independent variable on.
     If none, function uses all columns in the input besides the group column as dependent variables.
     :return: pandas DataFrame containing the F-scores and p value for the test of each dependent variable.
     """
+
+    assert isinstance(input_data, DataFrame), "Input data needs to be a pandas DataFrame"
+
     if columns:
         pass
     else:
@@ -194,12 +197,12 @@ def manova(input_data, group_column, columns=None):
 
     total_variance = data.loc[:, columns].cov() * (total_n - 1)
 
-    hypothesis_variance = ((sample_mean_matrix - grand_mean_vector).T*(n_vector)).dot(
+    hypothesis_variance = ((sample_mean_matrix - grand_mean_vector).T * (n_vector)).dot(
         (sample_mean_matrix - grand_mean_vector))
 
     error_variance = total_variance - hypothesis_variance
 
-    wilks_lambda = norm(error_variance.values)/norm(total_variance.values)
+    wilks_lambda = norm(error_variance.values) / norm(total_variance.values)
 
     hotelling_lawley_trace = trace(hypothesis_variance.dot(matrix_inverse(error_variance)))
 
@@ -211,7 +214,6 @@ def manova(input_data, group_column, columns=None):
     result.loc[:, 'labels'] = ["wilks_lambda", "hotelling_lawley_trace", "phillai_bartlett_trace"]
 
     return result
-
 
 # class AnovaDataFrame(DataFrame):
 #     """
